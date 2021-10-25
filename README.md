@@ -2,13 +2,13 @@
 
 Crear un programa con un método o función con la siguiente firma
 
-** boolean isMutant(String[] dna); **
+**boolean isMutant(String[] dna);**
 
 En donde recibirás como parámetro un array de Strings que representa cada fila de una tabla
 de (NxN) con las secuencias de ADN. Las letras de los Strings solo pueden ser: (A, T, C, G), las
 cuales representa cada base nitrogenada del ADN.
 
-Sabrás si un humano es mutante, si encuentras ** más de una secuencia de cuatro letras iguales, **
+Sabrás si un humano es mutante, si encuentras **más de una secuencia de cuatro letras iguales,**
 de forma oblicua, horizontal o vertical.
 
 ## Desafíos
