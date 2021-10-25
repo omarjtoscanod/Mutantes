@@ -10,6 +10,11 @@ import co.com.mercadolibre.mutantes.exception.DaoException;
 import co.com.mercadolibre.mutantes.exception.ServiceException;
 import co.com.mercadolibre.mutantes.model.Statistics;
 
+/**
+ * Implementación de la interfaz StatsService
+ * @author omar
+ *
+ */
 @Service
 public class StatsServiceImpl implements StatsService {
 	

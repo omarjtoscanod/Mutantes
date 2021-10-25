@@ -10,53 +10,74 @@ import java.math.RoundingMode;
  */
 public class Statistics {
 	
-	private BigDecimal countMutantDna;
+	private Long countMutantDna;
 	
-	private BigDecimal countHumanDna;
+	private Long countHumanDna;
 	
-	private BigDecimal ratio;
-
+	private Long ratio;
+	
+	/**
+	 * Constructor de la clase Statistics
+	 * @param countMutantDna Número de ADN mutante
+	 * @param countHumanDna Número de ADN humano
+	 */
 	public Statistics(Integer countMutantDna, Integer countHumanDna) {
 		super();
-		this.countMutantDna = new BigDecimal(countMutantDna);
-		this.countHumanDna = new BigDecimal(countHumanDna);
-		ratio = (this.countHumanDna.compareTo(BigDecimal.ZERO) != 0) ? 
-				this.countMutantDna.divide(this.countHumanDna, 2, RoundingMode.UNNECESSARY) 
-				: new BigDecimal("0.00");
+		this.countMutantDna = Long.valueOf(countMutantDna);
+		this.countHumanDna = Long.valueOf(countHumanDna);
+		ratio = (this.countHumanDna.compareTo(0L) != 0) ? 
+				this.countMutantDna / (this.countHumanDna) 
+				: 0L;
 	}
-
-
-	public BigDecimal getCountMutantDna() {
+	
+	/**
+	 * Obtiene el número de ADN Mutante
+	 * @return Número de ADN mutante
+	 */
+	public Long getCountMutantDna() {
 		return countMutantDna;
 	}
-
-
-
-	public void setCountMutantDna(BigDecimal countMutantDna) {
+	
+	/**
+	 * Set de número de ADN Mutante
+	 * @param countMutantDna Número de ADN mutante
+	 */
+	public void setCountMutantDna(Long countMutantDna) {
 		this.countMutantDna = countMutantDna;
 	}
-
-
-
-	public BigDecimal getCountHumanDna() {
+	
+	/**
+	 * Obtiene el número de ADN humano
+	 * @return Número de ADN Humano
+	 */
+	public Long getCountHumanDna() {
 		return countHumanDna;
 	}
-
-
-
-	public void setCountHumanDna(BigDecimal countHumanDna) {
+	
+	/**
+	 * Set de número de ADN humano
+	 * @param countHumanDna Número de ADN humano
+	 */
+	public void setCountHumanDna(Long countHumanDna) {
 		this.countHumanDna = countHumanDna;
 	}
-
-
-
-	public BigDecimal getRatio() {
+	
+	/**
+	 * Obtiene el ratio
+	 * @return ratio
+	 */
+	public Long getRatio() {
 		return ratio;
 	}
-
-	public void setRatio(BigDecimal ratio) {
+	
+	/**
+	 * Set de ratio
+	 * @param ratio ratio
+	 */
+	public void setRatio(Long ratio) {
 		this.ratio = ratio;
 	}
-	
-	
+
+
+		
 }

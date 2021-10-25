@@ -13,7 +13,7 @@ public interface StatsService {
 	/**
 	 * Obtiene las estadísticas
 	 * @return Estadisticas
-	 * @throws ServiceException
+	 * @throws ServiceException Excepción del servicio
 	 */
 	Statistics getStats() throws ServiceException;
 }

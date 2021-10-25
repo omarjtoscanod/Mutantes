@@ -30,7 +30,7 @@ public class MutantServiceImpl implements MutantService {
 	 * humano o mutante
 	 * @param dna Arreglo con la secuencia ADN
 	 * @return true si es mutante, false si es humano
-	 * @throws ServiceException
+	 * @throws ServiceException Excepción del servicio
 	 */
 	@Override
 	public boolean isMutant(String[] dna) throws ServiceException {

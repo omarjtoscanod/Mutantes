@@ -10,6 +10,11 @@ import co.com.mercadolibre.mutantes.model.Subject;
 import co.com.mercadolibre.mutantes.repository.SubjectRepository;
 import co.com.mercadolibre.mutantes.utils.MutantUtils;
 
+/**
+ * Implementación de la interfaz DAOService
+ * @author omar
+ *
+ */
 @Service
 public class DAOServiceImpl implements DAOService {
 	
@@ -21,7 +26,7 @@ public class DAOServiceImpl implements DAOService {
 	/**
 	 * Guarda la información del adn del sujeto: Humano o Mutante
 	 * @param subject Objecto que guarda el tipo y la secuencia ADN
-	 * @throws DaoException
+	 * @throws DaoException Excepción de base de datos
 	 */
 	@Override
 	public void insert(Subject subject) throws DaoException {
@@ -32,7 +37,7 @@ public class DAOServiceImpl implements DAOService {
 	/**
 	 * Obtiene el número de secuencias de Humanos
 	 * @return Número de secuencia de humanos analizadas
-	 * @throws DaoException
+	 * @throws DaoException Excepción de base de datos
 	 */
 	@Override
 	public int getHumansCount() throws DaoException {
@@ -42,7 +47,7 @@ public class DAOServiceImpl implements DAOService {
 	/**
 	 * Obtiene el número de secuencias de Mutantes
 	 * @return Número de secuencia de mutantes analizadas
-	 * @throws DaoException
+	 * @throws DaoException Excepción de base de datos
 	 */
 	@Override
 	public int getMutantsCount() throws DaoException {

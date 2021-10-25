@@ -1,5 +1,6 @@
 package co.com.mercadolibre.mutantes.utils;
 
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
@@ -33,7 +34,7 @@ public final class MutantUtils {
     
     /** Número de mínimo de secuencias de ADN que deben ser encontrados
      * para ser mutante */
-    private static final int CONST_MINIMO_SECUENCIA_A_ENCONTRAR = 2;
+    private static final int CONST_MAYOR_QUE_SECUENCIA = 3;
     
     /** Tamaño de una secuencia adn válida */
     private static final int CONS_TAMANO_SECUENCIA_ADN_VALIDA = 4;
@@ -57,14 +58,14 @@ public final class MutantUtils {
 	 * false en caso contrario
 	 */
 	private static boolean findHorizontal(char[][] dnaSequence) {
-        boolean continuar = false;
-        int dnaSequenceRange = dnaSequence.length;
-        String secuence;
-        for (int range = 0; range < dnaSequenceRange && !continuar; range++) {
-            secuence = String.valueOf(dnaSequence[range]);
-            continuar = findSequence(secuence);
+		int dnaSequenceSize = dnaSequence.length;
+        boolean isMutant = false;
+        String sequence;
+        for (int i = 0; i < dnaSequenceSize && !isMutant; i++) {
+            sequence = String.valueOf(dnaSequence[i]);
+            isMutant = findSequence(sequence);
         }
-        return continuar;
+        return isMutant;
     }
 	
 	/**
@@ -75,82 +76,190 @@ public final class MutantUtils {
 	 * false en caso contrario
 	 */
 	private static boolean findVertical(char[][] dnaSequence){
-        int dnaSequenceRange = dnaSequence.length;
-        boolean continuar = false;
-        StringBuilder secuence = new StringBuilder("");
-        for (int range = 0; range < dnaSequenceRange && !continuar; range++) {
-            for(int j = 0; j < dnaSequenceRange; j++) {
-                secuence.append(String.valueOf(dnaSequence[j][range]));
+		int dnaSequenceSize = dnaSequence.length;
+        boolean isMutant = false;
+        StringBuilder sequence = new StringBuilder();
+        for (int i = 0; i < dnaSequenceSize && !isMutant; i++) {
+            for(int j = 0; j < dnaSequenceSize; j++) {
+                sequence.append(dnaSequence[j][i]);
             }
-            continuar = findSequence(secuence.toString());
-            secuence = new StringBuilder("");
+            isMutant = findSequence(sequence.toString());
+            sequence = new StringBuilder("");
         }
 
-        return continuar;
+        return isMutant;
     }
 	
 	/**
 	 * Busca la cadena de secuencia mutante en dirección
-	 * diagonal empezando por el primer registro del arreglo
+	 * diagonal  empezando por el primer registro del arreglo
 	 * @param dnaSequence Arreglo con las secuencias ADN
 	 * @return true si encuentra cadena ADN Mutante, 
 	 * false en caso contrario
 	 */
-	private static boolean findDiagonalPrincipal(char[][] dnaSequence){
-        int dnaSequenceRange = dnaSequence.length;
-        StringBuilder secuence = new StringBuilder("");
-        boolean continuar = false;
-        for(int i = 0; i < dnaSequenceRange && !continuar; i++){
-        	secuence.append(String.valueOf(dnaSequence[i][i]));
+	private static boolean findDiagonalPrincipalLeft(char[][] dnaSequence){
+        int dnaSequenceSize = dnaSequence.length;
+        boolean isMutant = false;
+        StringBuilder sequence = new StringBuilder();
+        for(int i = 0; i < dnaSequenceSize && !isMutant; i++){
+            sequence.append(dnaSequence[i][i]);
         }
-        continuar = findSequence(secuence.toString());
-        return continuar;
+        isMutant = findSequence(sequence.toString());
+        return isMutant;
     }
 	
 	/**
 	 * Busca la cadena de secuencia mutante en dirección
-	 * diagonal empezando por el primer registro que se
-	 * encuentra al lado izquierdo de la diagonal principal
+	 * diagonal empezando por el último registro del arreglo
 	 * @param dnaSequence Arreglo con las secuencias ADN
 	 * @return true si encuentra cadena ADN Mutante, 
 	 * false en caso contrario
 	 */
-	private static boolean findDiagonalDerechaIzquierda(char[][] dnaSequence){
-        int dnaSequenceRange = dnaSequence.length - 1;
+	private static boolean findDiagonalPrincipalRight(char[][] dnaSequence){
+        int dnaSequenceSize = dnaSequence.length;
+        boolean isMutant = false;
+        StringBuilder sequence = new StringBuilder();
+        int index = 0;
+        for(int i = dnaSequenceSize - 1; i >= 0 && !isMutant; i--){
+            sequence.append(dnaSequence[index][i]);
+            index++;
+        }
+        isMutant = findSequence(sequence.toString());
+        return isMutant;
+    }
+	
+	/**
+	 * Busca la cadena de secuencia mutante en las diagonales
+	 * izquierdas desde el primer registro más uno
+	 * @param dnaSequence Arreglo con las secuencias ADN
+	 * @return true si encuentra cadena ADN Mutante, 
+	 * false en caso contrario
+	 */
+	private static boolean findDiagonalsLeftInitial(char[][] dnaSequence){
+        int dnaSequenceSize = dnaSequence.length - 1;
         int sequenceLength = CONS_TAMANO_SECUENCIA_ADN_VALIDA;
         int index = 1;
-        boolean continuarDerecha = false;
-        boolean continuarIzquierda = false;
-        StringBuilder sequenceDerecha = new StringBuilder("");
-        StringBuilder sequenceIzquierda = new StringBuilder("");
-        while(sequenceLength > 3 && !continuarDerecha && !continuarIzquierda){
-            for(int i = 0; i < dnaSequenceRange; i++) {
-                sequenceDerecha.append(dnaSequence[i][i + index]);
-                sequenceIzquierda.append(dnaSequence[i + index][i]);
+        boolean isMutant = false;
+        StringBuilder sequence = new StringBuilder();
+        while(sequenceLength > CONST_MAYOR_QUE_SECUENCIA && !isMutant){
+            for(int i = 0; i < dnaSequenceSize; i++) {
+                sequence.append(dnaSequence[i + index][i]);
             }
-            continuarDerecha = findSequence(sequenceDerecha.toString());
-            continuarIzquierda = findSequence(sequenceIzquierda.toString());
-            sequenceLength = sequenceDerecha.length();
-            sequenceDerecha = new StringBuilder("");
-            sequenceIzquierda = new StringBuilder("");
+            isMutant = findSequence(sequence.toString());
+            sequenceLength = sequence.length();
+            sequence = new StringBuilder("");
             index += 1;
-            dnaSequenceRange -= 1;
+            dnaSequenceSize -= 1;
         }
-        if(continuarDerecha || continuarIzquierda){
-            return true;
-        }
-        return false;
+        return isMutant;
     }
 	
-	private static boolean findSequence(String secuence){
-        if (contSecuencias < CONST_MINIMO_SECUENCIA_A_ENCONTRAR) {
-            if (secuence.indexOf(CONST_CCCC) >= 0 || secuence.indexOf(CONST_TTTT) >= 0
-                    || secuence.indexOf(CONST_AAAA) >= 0 || secuence.indexOf(CONST_GGGG) >= 0) {
-                contSecuencias++;
-                if(contSecuencias > 1){
-                    return true;
-                }
+	/**
+	 * Busca la cadena de secuencia mutante en las diagonales
+	 * derechas desde el primer registro más uno
+	 * @param dnaSequence Arreglo con las secuencias ADN
+	 * @return true si encuentra cadena ADN Mutante, 
+	 * false en caso contrario
+	 */
+	private static boolean findDiagonalsRightInitial(char[][] dnaSequence){
+        int dnaSequenceSize = dnaSequence.length - 1;
+        int sequenceLength = CONS_TAMANO_SECUENCIA_ADN_VALIDA;
+        int index = 1;
+        boolean isMutant = false;
+        StringBuilder sequence = new StringBuilder();
+        while(sequenceLength > CONST_MAYOR_QUE_SECUENCIA && !isMutant){
+            for(int i = 0; i < dnaSequenceSize; i++) {
+                sequence.append(dnaSequence[i][i + index]);
             }
+            isMutant = findSequence(sequence.toString());
+            sequenceLength = sequence.length();
+            sequence = new StringBuilder("");
+            index += 1;
+            dnaSequenceSize -= 1;
+        }
+        return isMutant;
+    }
+	
+	/**
+	 * Busca la cadena de secuencia mutante en las diagonales
+	 * izquierdas desde el último registro más uno
+	 * @param dnaSequence Arreglo con las secuencias ADN
+	 * @return true si encuentra cadena ADN Mutante, 
+	 * false en caso contrario
+	 */
+	private static boolean findDiagonalsLeftFinal(char[][] dnaSequence){
+        int dnaSequenceSize = dnaSequence.length;
+        int sequenceLength = CONS_TAMANO_SECUENCIA_ADN_VALIDA;
+        int index = 0;
+        boolean isMutant = false;
+        StringBuilder sequence = new StringBuilder();
+        while(sequenceLength > CONST_MAYOR_QUE_SECUENCIA && !isMutant){
+            for(int i = dnaSequenceSize - 1; i > 0 && sequenceLength > CONST_MAYOR_QUE_SECUENCIA && !isMutant; i--) {
+                sequence.append(dnaSequence[index][i - 1]);
+                index += 1;
+            }
+            isMutant = findSequence(sequence.toString());
+            sequenceLength = sequence.length();
+            sequence = new StringBuilder("");
+            index = 0;
+            dnaSequenceSize -= 1;
+        }
+        return isMutant;
+    }
+	
+	/**
+	 * Busca la cadena de secuencia mutante en las diagonales
+	 * derechas desde el último registro más uno
+	 * @param dnaSequence Arreglo con las secuencias ADN
+	 * @return true si encuentra cadena ADN Mutante, 
+	 * false en caso contrario
+	 */
+	private static boolean findDiagonalsRightFinal(char[][] dnaSequence){
+        int dnaSequenceSize = dnaSequence.length - 1;
+        int sequenceLength = CONS_TAMANO_SECUENCIA_ADN_VALIDA;
+        int indexColumna = 6;
+        int indexFila = 0;
+        int valorInicialIndex = 0;
+        boolean isMutant = false;
+        StringBuilder sequence = new StringBuilder();
+        while(sequenceLength > CONST_MAYOR_QUE_SECUENCIA && !isMutant){
+            for(int i = valorInicialIndex; i < dnaSequenceSize && sequenceLength > CONST_MAYOR_QUE_SECUENCIA && !isMutant
+                    && indexFila < dnaSequenceSize; i++) {
+                indexFila = i + 1;
+                sequence.append(dnaSequence[indexFila][indexColumna - 1]);
+                indexColumna -= 1;
+            }
+            isMutant = findSequence(sequence.toString());
+            sequenceLength = sequence.length();
+            sequence = new StringBuilder("");
+            valorInicialIndex += 1;
+            indexColumna = 6;
+            dnaSequenceSize = indexFila;
+            indexFila = 0;
+        }
+        return isMutant;
+    }
+	
+	
+	/**
+	 * Busca la secuencia en la cadena de ADN ingresada
+	 * @param sequence Cadena de ADN a validar
+	 * @return true si encuentra cadena ADN Mutante, 
+	 * false en caso contrario
+	 */
+	private static boolean findSequence(String sequence){
+		System.out.println("Secuencia: " + sequence);
+        Predicate<String> p1 = (String strDNA) -> strDNA.contains(CONST_CCCC);
+        Predicate<String> p2 = (String strDNA) -> strDNA.contains(CONST_TTTT);
+        Predicate<String> p3 = (String strDNA) -> strDNA.contains(CONST_AAAA);
+        Predicate<String> p4 = (String strDNA) -> strDNA.contains(CONST_GGGG);
+
+        Predicate<String> pGeneral = p1.or(p2).or(p3).or(p4);
+
+        if(contSecuencias > 1){
+            return true;
+        }else if(pGeneral.test(sequence) ){
+            contSecuencias++;
         }
         return false;
     }
@@ -167,17 +276,25 @@ public final class MutantUtils {
             return true;
         if(findVertical(dnaSequence))
             return true;
-        if(findDiagonalPrincipal(dnaSequence))
+        if(findDiagonalPrincipalLeft(dnaSequence))
             return true;
-        return findDiagonalDerechaIzquierda(dnaSequence);
+        if(findDiagonalPrincipalRight(dnaSequence))
+            return true;
+        if(findDiagonalsLeftInitial(dnaSequence))
+            return true;
+        if(findDiagonalsRightInitial(dnaSequence))
+            return true;
+        if(findDiagonalsLeftFinal(dnaSequence))
+            return true;
+        return findDiagonalsRightFinal(dnaSequence);
     }
 	
 	/**
 	 * Realiza validaciones previas antes de empezar la búsqueda del adn,
 	 * las validaciones que realiza es de longitud, caractéres aceptados
-	 * @param dna
-	 * @return
-	 * @throws MutantException
+	 * @param dna Arreglo con todas las secuencias de ADN
+	 * @return Arreglo con las secuencias de ADN
+	 * @throws MutantException Excepción de tipo MutantException
 	 */
 	public static char[][] validarADNIngresado (String[] dna) throws MutantException{
 		int dnaLength = dna.length;
