@@ -248,7 +248,6 @@ public final class MutantUtils {
 	 * false en caso contrario
 	 */
 	private static boolean findSequence(String sequence){
-		System.out.println("Secuencia: " + sequence);
         Predicate<String> p1 = (String strDNA) -> strDNA.contains(CONST_CCCC);
         Predicate<String> p2 = (String strDNA) -> strDNA.contains(CONST_TTTT);
         Predicate<String> p3 = (String strDNA) -> strDNA.contains(CONST_AAAA);
